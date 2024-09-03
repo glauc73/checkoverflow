@@ -13,7 +13,7 @@ int CheckUnderflow(const char* str);
 int CheckOverflow(const char *str);
 static inline void skips(const char** strnumber);
 size_t strnumberlen(const char* str) ;
-int strnumbercmp(const char* strnumber, const char* strnumber2);
+int strnumcmp(const char* strnumber, const char* strnumber2);
 
 
 size_t strnumberlen(const char* str) {
@@ -27,12 +27,16 @@ size_t strnumberlen(const char* str) {
 
 void skips(const char** strnumber) {
 
-    while(**strnumber == '0' || **strnumber == ' ') {
+    while(**strnumber == ' ') {
         (*strnumber)++;
     }
+    while(**strnumber == '0') {
+        (*strnumber)++;
+    }
+    if(**strnumber == '\0' || **strnumber == ' ') (*strnumber)--;
 }
 
-int strnumbercmp(const char* strnumber, const char* strnumber2) {
+int strnumcmp(const char* strnumber, const char* strnumber2) {
     
     skips(&strnumber);
     skips(&strnumber2);
@@ -54,7 +58,7 @@ int strnumbercmp(const char* strnumber, const char* strnumber2) {
         return -2;
     }
 
-    const char* iterator = strnumber2;
+    const char* iterator = strnumber;
 
     size_t len = strnumberlen(strnumber);
     size_t len2 = strnumberlen(strnumber2);
@@ -95,12 +99,12 @@ int64_t strtoi64(const char* str) {
 
 int CheckOverflow(const char *str) {
     const char MaxInt[] = "9223372036854775807";
-    return (strnumbercmp(MaxInt, str) < 0);
+    return (strnumcmp(MaxInt, str) < 0);
 }
 
 int CheckUnderflow(const char* str) {
     const char Minint[] = "-9223372036854775808";
-    return (strnumbercmp(Minint, str) > 0);
+    return (strnumcmp(Minint, str) > 0);
 }
 
 
@@ -110,10 +114,8 @@ char* strget(char* str, size_t size) {
     return str;
 
 }
-int main(int argc, char const *argv[])
+int main()
 {
-    char expr[32];
-    printf("informe um numero\n");
-    printf("%lld", strtoi64(strget(expr, 32)));
+    printf("%lld", strtoi64("12345678910"));
     return 0;
 }
